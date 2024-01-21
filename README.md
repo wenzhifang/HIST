@@ -9,11 +9,11 @@ torchvision==0.2.0
 
 # Model Partition
 
-![Journal_HIST](/Users/fang375/Desktop/HIST_CODE_GitHub/Photo/Journal_HIST.jpg)
+![Journal_HIST](https://github.com/wenzhifang/HIST/tree/main/Photo/Journal_HIST.jpg)
 
 The key idea behind *HIST* is a hierarchical version of model partitioning, where we divide the global model into disjoint partitions (or submodels) per round so that each cell is responsible for training only one partition of the model, reducing client-side computational/storage costs and overall communication load.
 
-![neural_partition](/Users/fang375/Desktop/HIST_CODE_GitHub/Photo/neural_partition.jpg)
+![neural_partition](https://github.com/wenzhifang/HIST/tree/main/Photo/neural_partition.jpg)
 
 Model partitioning can be achieved by partitioning the hidden neurons of fully connected layers.
 For CNNs, we only partition the fully connected layers while the convolutional layers are shared by different cells. In particular, we let the input and output neurons be independent of partition and partition the hidden neurons every two layers. As a result, the parameter volume of each submodel is equal to $1/N$ of that of the full model on average.
@@ -61,3 +61,4 @@ For example:
 
 ## Acknowledgments
 Acknowledgments were given to [Shaoxiong Ji](https://github.com/shaoxiongji/federated-learning/tree/master) and [Binghang Yuan](https://github.com/BinhangYuan/IST_Release) for their sharing on the implementation of FL and IST.
+
