@@ -60,5 +60,5 @@ For example:
 
 
 ## Acknowledgments
-Acknowledgments were given to [Shaoxiong Ji](https://github.com/shaoxiongji/federated-learning/tree/master) and [Binghang Yuan](https://github.com/BinhangYuan/IST_Release) for their sharing on the implementation of FL and IST.
+Thanks [Shaoxiong Ji](https://github.com/shaoxiongji/federated-learning/tree/master) for his sharing on the implementation of FL.
 
