@@ -33,35 +33,22 @@ if __name__ == '__main__':
     net_glob_IST, net_glob_fed, dict_users, dataset_train, dataset_test = Model_Dataset(args)
 
     print(net_glob_IST)
-    global_loss_train_list_HIST = []
     global_acc_train_list_HIST = []
     global_acc_test_list_HIST = []
-    global_loss_train_list_fed = []
     global_acc_train_list_fed = []
     global_acc_test_list_fed = []
 
-    # initia status training loss & acc, which would be the same for HIST and HFL
-    global_acc_train_HIST, global_loss_train_HIST = test_img(net_glob_IST, dataset_train, args)
-    global_loss_train_list_HIST.append(global_loss_train_HIST)
+    # initia status training acc, which would be the same for HIST and HFL
+    global_acc_train_HIST, _ = test_img(net_glob_IST, dataset_train, args)
     global_acc_train_list_HIST.append(global_acc_train_HIST)
-    global_loss_train_list_fed.append(global_loss_train_HIST)
     global_acc_train_list_fed.append(global_acc_train_HIST)
-    # initia status testing loss & acc, which would be the same for HIST and HFL
+    # initia status testing acc, which would be the same for HIST and HFL
     global_acc_test_HIST, _ = test_img(net_glob_IST, dataset_test, args)
     global_acc_test_list_HIST.append(global_acc_test_HIST)
     global_acc_test_list_fed.append(global_acc_test_HIST)
-    print('Initial Global training loss {:.3f}'.format(global_loss_train_HIST))
     print('Initial Global training accuracy {:.3f}'.format(global_acc_train_HIST))
     print('Initial Global test accuracy {:.3f}'.format(global_acc_test_HIST))
 
-    log_name = './save_fmnist/training_log_{}_{}_N{:1d}_H{:1d}_E{:1d}_Epoch{:1d}.txt'.format(args.dataset, args.iid, args.num_cells,
-                                                                                args.local_ep, args.num_edge_steps,
-                                                                                args.epochs)
-    with open(log_name, 'w') as log_file:
-        # Optionally write an initial message or leave it empty to just clear the file
-        log_file.write('Starting new experiment: {}_{}_{}_N{:1d}_H{:1d}_E{:1d}_Epoch{:1d} \n'.format(args.dataset, args.model, args.iid, args.num_cells,
-                                                                               args.local_ep, args.num_edge_steps,
-                                                                               args.epochs))
 
     ##################################################### Training #########################################################
     for iter in range(args.epochs):
@@ -96,44 +83,24 @@ if __name__ == '__main__':
         net_glob_IST.flush() # HIST, global synchronization
         net_glob_fed.load_state_dict(FedAvg(w_edges_fed)) # HFL, global federated averaging
 ##################################################### Training #########################################################
-        # record global training loss and accuracy for HIST
-        global_acc_train_HIST, global_loss_train_HIST = test_img(net_glob_IST, dataset_train, args)
-        global_loss_train_list_HIST.append(global_loss_train_HIST)
+        global_acc_train_HIST, _ = test_img(net_glob_IST, dataset_train, args)
         global_acc_train_list_HIST.append(global_acc_train_HIST)
-        print('Round {:3d}, Global training loss of HIST {:.3f}'.format(iter, global_loss_train_HIST))
         print('Round {:3d}, Global training accuracy of HIST {:.3f}'.format(iter, global_acc_train_HIST))
-        # record global testing loss and accuracy for HIST
         global_acc_test_HIST, _ = test_img(net_glob_IST, dataset_test, args)
         global_acc_test_list_HIST.append(global_acc_test_HIST)
         print('Round {:3d}, Global test accuracy of HIST {:.3f}'.format(iter, global_acc_test_HIST))
 
-        # record global training loss and accuracy for Fed
-        global_acc_train_fed, global_loss_train_fed = test_img(net_glob_fed, dataset_train, args)
-        global_loss_train_list_fed.append(global_loss_train_fed)
+        global_acc_train_fed, _ = test_img(net_glob_fed, dataset_train, args)
         global_acc_train_list_fed.append(global_acc_train_fed)
-        print('Round {:3d}, Global training loss of HFL {:.3f}'.format(iter, global_loss_train_fed))
         print('Round {:3d}, Global training accuracy of HFL {:.3f}'.format(iter, global_acc_train_fed))
-        # record global testing loss and accuracy for Fed
         global_acc_test_fed, _ = test_img(net_glob_fed, dataset_test, args)
         global_acc_test_list_fed.append(global_acc_test_fed)
         print('Round {:3d}, Global test accuracy of HFL {:.3f}'.format(iter, global_acc_test_fed))
 
-        with open(log_name, 'a') as log_file:
-            # record global training loss and accuracy for HIST
-            log_file.write('Round {:3d}, Global training loss of HIST {:.3f}\n'.format(iter, global_loss_train_HIST))
-            log_file.write('Round {:3d}, Global training accuracy of HIST {:.3f}\n'.format(iter, global_acc_train_HIST))
-            log_file.write('Round {:3d}, Global test accuracy of HIST {:.3f}\n'.format(iter, global_acc_test_HIST))
-            log_file.write('Round {:3d}, Global training loss of HFL {:.3f}\n'.format(iter, global_loss_train_fed))
-            log_file.write('Round {:3d}, Global training accuracy of HFL {:.3f}\n'.format(iter, global_acc_train_fed))
-            log_file.write('Round {:3d}, Global test accuracy of HFL {:.3f}\n'.format(iter, global_acc_test_fed))
-
     data_to_save = {
         'args': args,
-        'global_loss_train_list_HIST': global_loss_train_list_HIST,
         'global_acc_train_list_HIST': global_acc_train_list_HIST,
         'global_acc_test_list_HIST': global_acc_test_list_HIST,
-        'global_loss_train_list_fed': global_loss_train_list_fed,
-        'global_acc_train_list_fed': global_acc_train_list_fed,
         'global_acc_test_list_fed': global_acc_test_list_fed
     }
     # Save the dictionary containing the data to a single file
