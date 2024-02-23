@@ -55,10 +55,10 @@ if __name__ == '__main__':
         # send the repartitioned models, use these submodel to initialize edge server's models
         net_glob_IST.partition_to_list()
         idxs_cells = [i for i in range(args.num_cells)]
+        w_edges_fed = []
         for idx_c in idxs_cells:
             net_edge_IST = dispatch_model_to_edge_server(args, net_glob_IST, idx_c)
             net_edge_fed = copy.deepcopy(net_glob_fed)
-            w_edges_fed = []
             for edge_iter in range(args.num_edge_steps):
                 w_locals_IST = []
                 w_locals_fed = []
